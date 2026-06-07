@@ -15,6 +15,7 @@ export interface Config {
   opencode: {
     baseUrl: string
     externalUrl: boolean
+    workDir: string
   }
   allowedUsers: string[]
   maxReplyLength: number
@@ -67,6 +68,7 @@ export async function ensureConfig(): Promise<void> {
     `QQ_APP_SECRET=${appSecret}`,
     `QQ_SANDBOX=false`,
     `# OPENCODE_BASE_URL=http://localhost:4096`,
+    `# OPENCODE_WORK_DIR=`,
     `ALLOWED_USERS=`,
     `MAX_REPLY_LENGTH=3000`,
   ].join("\n") + "\n"
@@ -114,6 +116,7 @@ export function loadConfig(): Config {
     opencode: {
       baseUrl: process.env.OPENCODE_BASE_URL?.trim() || "",
       externalUrl: !!process.env.OPENCODE_BASE_URL?.trim(),
+      workDir: process.env.OPENCODE_WORK_DIR?.trim() || "",
     },
     allowedUsers,
     maxReplyLength: parseInt(process.env.MAX_REPLY_LENGTH ?? "3000", 10),
