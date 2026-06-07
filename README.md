@@ -87,6 +87,57 @@ echo "OPENCODE_BASE_URL=http://localhost:4096" >> ~/.openqq/.env
 
 ---
 
+## Systemd 服务
+
+`openqq` 支持安装为 systemd 用户服务，实现开机自启和自动重启。
+
+### 安装
+
+```bash
+# 在任意目录执行（OPENCODE_WORK_DIR 会记录当前目录）
+openqq --install-service
+```
+
+安装时会自动：
+- 将当前目录写入 `OPENCODE_WORK_DIR`（AI 会话的工作目录）
+- 创建 `~/.config/systemd/user/openqq.service`
+- 执行 `daemon-reload`、`enable`、`start`
+
+服务文件会固化安装时的 `PATH` 和 `OPENCODE_WORK_DIR` 环境变量，确保运行环境一致。
+
+### 卸载
+
+```bash
+openqq --uninstall-service
+```
+
+卸载会自动停止服务、禁用开机自启、删除 `.service` 文件。
+
+### 前置条件
+
+需要 systemd user 模式可用：
+
+```bash
+systemctl --user show-environment   # 验证
+```
+
+如果失败，可能需要启用 linger：
+
+```bash
+loginctl enable-linger $(whoami)
+```
+
+### 管理命令
+
+```bash
+systemctl --user status openqq      # 查看状态
+systemctl --user stop openqq        # 停止
+systemctl --user restart openqq     # 重启
+journalctl --user -u openqq -f      # 查看实时日志
+```
+
+---
+
 ## 命令列表
 
 在 QQ 对话中发送以下命令：
