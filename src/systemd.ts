@@ -43,7 +43,9 @@ export function installService(): void {
 
   const envLines: string[] = []
   for (const key of ["PATH", "OPENCODE_WORK_DIR"]) {
-    const val = process.env[key]
+    const val = key === "OPENCODE_WORK_DIR" && !process.env[key]
+      ? process.cwd()
+      : process.env[key]
     if (val) {
       envLines.push(`Environment=${key}=${val}`)
     }
